@@ -1,0 +1,4 @@
+defaults:
+  - batch_transforms: asv
+  - instance_transforms: asv
+  - _self_

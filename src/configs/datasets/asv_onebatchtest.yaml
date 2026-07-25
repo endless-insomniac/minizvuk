@@ -1,0 +1,12 @@
+train:
+  _target_: src.datasets.ASVDataset
+  audio_dir: ???
+  protocol_path: ???
+  limit: 8
+  instance_transforms: $transforms.instance_transforms.inference$
+val:
+  _target_: src.datasets.ASVDataset
+  audio_dir: ???
+  protocol_path: ???
+  limit: 8
+  instance_transforms: $transforms.instance_transforms.inference$
