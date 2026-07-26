@@ -1,4 +1,5 @@
 from abc import abstractmethod
+from hw.calculate_eer import compute_eer
 
 import torch
 from numpy import inf
@@ -252,37 +253,59 @@ class BaseTrainer:
         return logs
 
     def _evaluation_epoch(self, epoch, part, dataloader):
-        """
-        Evaluate model on the partition after training for an epoch.
-
-        Args:
-            epoch (int): current training epoch.
-            part (str): partition to evaluate on
-            dataloader (DataLoader): dataloader for the partition.
-        Returns:
-            logs (dict): logs that contain the information about evaluation.
-        """
         self.is_train = False
         self.model.eval()
         self.evaluation_metrics.reset()
+
+        all_scores = []
+        all_labels = []
+
         with torch.no_grad():
             for batch_idx, batch in tqdm(
-                enumerate(dataloader),
-                desc=part,
-                total=len(dataloader),
+                    enumerate(dataloader),
+                    desc=part,
+                    total=len(dataloader),
             ):
                 batch = self.process_batch(
                     batch,
                     metrics=self.evaluation_metrics,
                 )
-            self.writer.set_step(epoch * self.epoch_len, part)
-            self._log_scalars(self.evaluation_metrics)
-            self._log_batch(
-                batch_idx, batch, part
-            )  # log only the last batch during inference
 
-        return self.evaluation_metrics.result()
 
+                scores = batch["logits"][:, 1] - batch["logits"][:, 0]
+
+                all_scores.append(scores.detach().cpu())
+                all_labels.append(batch["labels"].detach().cpu())
+
+        logs = self.evaluation_metrics.result()
+
+        scores = torch.cat(all_scores).numpy()
+        labels = torch.cat(all_labels).numpy()
+
+        bonafide_scores = scores[labels == 1]
+        spoof_scores = scores[labels == 0]
+
+        if len(bonafide_scores) > 0 and len(spoof_scores) > 0:
+            eer, threshold = compute_eer(
+                bonafide_scores,
+                spoof_scores,
+            )
+
+            logs["eer"] = float(eer * 100)
+            logs["eer_threshold"] = float(threshold)
+        else:
+            logs["eer"] = float("nan")
+            logs["eer_threshold"] = float("nan")
+
+        self.writer.set_step(epoch * self.epoch_len, part)
+
+        self._log_scalars(self.evaluation_metrics)
+
+        self.writer.add_scalar("eer", logs["eer"])
+
+        self._log_batch(batch_idx, batch, part)
+
+        return logs
     def _monitor_performance(self, logs, not_improved_count):
         """
         Check if there is an improvement in the metrics. Used for early
