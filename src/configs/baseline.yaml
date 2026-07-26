@@ -1,6 +1,6 @@
 defaults:
   - model: lcnn
-  - writer: wandb
+  - writer: cometml
   - metrics: example
   - datasets: asv
   - dataloader: example
