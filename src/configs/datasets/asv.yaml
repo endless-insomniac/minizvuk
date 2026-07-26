@@ -3,16 +3,10 @@ train:
   audio_dir: ???
   protocol_path: ???
   limit: null
-  instance_transforms: $transforms.instance_transforms.train$
+  instance_transforms: ${transforms.instance_transforms.train}
 val:
   _target_: src.datasets.ASVDataset
   audio_dir: ???
   protocol_path: ???
   limit: null
-  instance_transforms: $transforms.instance_transforms.inference
-test:
-  _target_: src.datasets.ASVDataset
-  audio_dir: ???
-  protocol_path: ???
-  limit: null
-  instance_transforms: $transforms.instance_transforms.inference
+  instance_transforms: $transforms.instance_transforms.inference}

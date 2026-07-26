@@ -1,1 +1,1 @@
-from src.metrics.example import ExampleMetric
+from src.metrics.calculate_eer import compute_eer

@@ -4,12 +4,12 @@ import math
 
 
 class WaveformToSpectrogram:
-    def __init__(self, n_fft=1724, win_lengh=1724, hop_lenth=130,
+    def __init__(self, n_fft=1724, win_length=1724, hop_length=130,
                  target_frames=600, random_crop=False):
         self.target_frames = target_frames
         self.random_crop = random_crop
 
-        self.spectrogram = torchaudio.transforms.Spectrogram(n_fft=n_fft, win_length=win_lengh, hop_length=hop_lenth,
+        self.spectrogram = torchaudio.transforms.Spectrogram(n_fft=n_fft, win_length=win_length, hop_length=hop_length,
                                                              window_fn=torch.blackman_window, power=2.0)
 
     def __call__(self, waveform):

@@ -1,1 +1,1 @@
-from src.datasets.avs_dataset import ASVDataset
+from src.datasets.asv_dataset import ASVDataset
