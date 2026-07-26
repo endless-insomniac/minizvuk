@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from hw.calculate_eer import compute_eer
+from src.hw.calculate_eer import compute_eer
 
 import torch
 from numpy import inf
