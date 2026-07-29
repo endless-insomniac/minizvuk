@@ -137,22 +137,23 @@ class CometMLWriter:
             name="checkpoints", file_or_folder=checkpoint_path, overwrite=True
         )
 
-    def add_scalar(self, scalar_name, scalar):
+    def add_scalar(self, scalar_name, scalar, epoch=None):
         """
         Log a scalar to the experiment tracker.
 
         Args:
             scalar_name (str): name of the scalar to use in the tracker.
             scalar (float): value of the scalar.
+            epoch
         """
         self.exp.log_metrics(
             {
                 self._object_name(scalar_name): scalar,
             },
-            step=self.step,
+            step=self.step,epoch=epoch
         )
 
-    def add_scalars(self, scalars):
+    def add_scalars(self, scalars, epoch=None):
         """
         Log several scalars to the experiment tracker.
 
@@ -164,7 +165,7 @@ class CometMLWriter:
                 self._object_name(scalar_name): scalar
                 for scalar_name, scalar in scalars.items()
             },
-            step=self.step,
+            step=self.step,epoch=epoch
         )
 
     def add_image(self, image_name, image):

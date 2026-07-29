@@ -301,7 +301,7 @@ class BaseTrainer:
 
         self._log_scalars(self.evaluation_metrics)
 
-        self.writer.add_scalar("eer", logs["eer"])
+        self.writer.add_scalar("eer", logs["eer"], epoch=epoch)
 
         self._log_batch(batch_idx, batch, part)
 
