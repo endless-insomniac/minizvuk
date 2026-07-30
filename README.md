@@ -49,3 +49,24 @@ python train.py \
 ## Evaluation
 
 The main metric is **Equal Error Rate (EER)**. Lower EER means better separation between bonafide and spoof speech.
+
+## Installation
+
+Clone the repository:
+
+```bash
+git clone https://github.com/endless-insomniac/minizvuk.git
+cd minizvuk
+```
+
+Install the dependencies:
+
+```bash
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+```
+
+For experiment tracking with Comet ML, set the API key:
+```bash
+export COMET_API_KEY="your_api_key"
+```
