@@ -1,44 +1,45 @@
 # Homework (Voice Anti-spoofing)
 
-<p align="center">
-  <a href="#about">About</a> •
-  <a href="#tutorials">Tutorials</a> •
-  <a href="#examples">Examples</a> •
-  <a href="#installation">Installation</a> •
-  <a href="#how-to-use">How To Use</a> •
-  <a href="#useful-links">Useful Links</a> •
-  <a href="#credits">Credits</a> •
-  <a href="#license">License</a>
-</p>
-
-<p align="center">
-<a href="https://github.com/Blinorot/pytorch_project_template/generate">
-  <img src="https://img.shields.io/badge/use%20this-template-green?logo=github">
-</a>
-<a href="https://github.com/Blinorot/pytorch_project_template/blob/main/LICENSE">
-   <img src=https://img.shields.io/badge/license-MIT-blue.svg>
-</a>
-<a href="https://github.com/Blinorot/pytorch_project_template/blob/main/CITATION.cff">
-   <img src="https://img.shields.io/badge/cite-this%20repo-purple">
-</a>
-</p>
 
 ## About
 
-This repository contains a template for [PyTorch](https://pytorch.org/)-based Deep Learning projects.
+The task is to implement anti-spoofing countermeasure against Logical Access (LA) attacks: by audiofile determine whether it is bonafide speech or spoof speech. 
 
-The template utilizes different python-dev techniques to improve code readability. Configuration methods enhance reproducibility and experiments control.
+## Dataset
 
-The repository is released as a part of the [HSE DLA course](https://github.com/markovka17/dla), however, can easily be adopted for any DL-task.
+The project uses the [ASVspoof 2019 dataset](https://www.kaggle.com/datasets/awsaf49/asvpoof-2019-dataset), Logical Access subset.
 
-This template is the official recommended template for the [EPFL CS-433 ML Course](https://www.epfl.ch/labs/mlo/machine-learning-cs-433/).
+- `train` — training data;
+- `dev` — validation data;
+- `eval` — final evaluation data.
 
-**New:** we added a [HF Main](https://github.com/Blinorot/pytorch_project_template/tree/hf_main) variant of the template with [HuggingFace](https://huggingface.co/) Integration for multi-GPU and multi-node training, automatic mixed precision, gradient accumulation, and seamless HuggingFace Ecosystem Compatibility.
+## Project structure
 
-> 📖 **If you use this template in your work, please cite this repository or include a reference. Attribution supports the project and encourages continued development.**
+.
+├── src/
+│   ├── configs/ # hydra configurations
+│   ├── datasets/ # dataset loading
+│   ├── hw/ # EER calculation and grading
+│   ├── logger/ # experiment logging
+│   ├── loss/ # loss functions
+│   ├── metrics/ # metrics
+│   ├── model/ # LCNN model
+│   ├── trainer/ # training and validation
+│   ├── transforms/ # audio preprocessing
+│   └── utils/
 
 
+## Training
 
-This repository is based on a heavily modified fork of [pytorch-template](https://github.com/victoresque/pytorch-template) and [asr_project_template](https://github.com/WrathOfGrapes/asr_project_template) repositories.
+python train.py \
+  datasets.train.audio_dir=/path/to/train/flac \
+  datasets.train.protocol_path=/path/to/train_protocol.txt \
+  datasets.val.audio_dir=/path/to/dev/flac \
+  datasets.val.protocol_path=/path/to/dev_protocol.txt \
+  dataloader.batch_size=16 \
+  trainer.device=cuda \
+  trainer.n_epochs=15
 
+## Evaluation
 
+The main metric is **Equal Error Rate (EER)**. Lower EER means better separation between bonafide and spoof speech.
